@@ -1,0 +1,76 @@
+{% extends "layout.html" %}
+
+{% block content %}
+<h1>{{ current_user.username }}'s Blogs</h1>
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <ul>
+        {% for message in messages %}
+        <li>{{ message }}</li>
+        {% endfor %}
+    </ul>
+    {% endif %}
+    {% endwith %}
+    <form action="" method="post" enctype="multipart/form-data">
+        {{ form.hidden_tag() }} <br>
+        <div>
+            {{ form.title.label }}
+            {{ form.title }}
+            {% if form.title.errors %}
+                {% for error in form.title.errors %}
+                <div>{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+        </div><br>
+        <div>
+            {{ form.image.label }}
+            {{ form.image }}
+            {% if form.image.errors %}
+                {% for error in form.image.errors %}
+                <div>{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+        </div><br>
+        <div>
+            {{ form.content.label }}
+            {{ form.content }}
+            {% if form.content.errors %}
+                {% for error in form.content.errors %}
+                <div>{{ error }}</div>
+                {% endfor %}
+            {% endif %}
+        </div><br>
+        <!-- Location code -->
+        <div>
+            <input type="hidden" id="latitude" name="latitude">
+            <input type="hidden" id="longitude" name="longitude">
+        </div><br>
+        <div>
+            {{ form.submit() }}
+        </div>
+
+        <div><h2>Old Posts</h2></div>
+        <ul>
+            {% for post in posts %}
+                <li>
+                    <div>{{ post.title }}</div>
+                    <div>{{ post.content }}</div>
+                    
+                    
+                </li>
+            {% endfor %}
+        </ul>
+    </form>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(function(position) {
+                    document.getElementById('latitude').value = position.coords.latitude;
+                    document.getElementById('longitude').value = position.coords.longitude;
+                });
+            } else {
+                alert("Geolocation is not supported by this browser.");
+            }
+        });
+    </script>
+{% endblock content %}
